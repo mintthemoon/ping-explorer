@@ -1,7 +1,7 @@
 {
     "chain_name": "kujira",
     "api": ["https://test-lcd-kujira.mintthemoon.xyz", "https://api.kujira.pupmos.network"],
-    "rpc": ["https://test-rpc-kujira.mintthemoon.xyz", "https://rpc.kujira.pupmos.network"],
+    "rpc": ["https://test-rpc-kujira.mintthemoon.xyz", "https://kujira-testnet-rpc.polkachu.com"],
     "sdk_version": "0.45.4",
     "addr_prefix": "kujira",
     "coin_type": "118",
