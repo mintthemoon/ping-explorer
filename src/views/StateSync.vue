@@ -102,18 +102,18 @@ export default {
       snapshot: `[state-sync]
 # snapshot-interval specifies the block interval at which local state sync snapshots are
 # taken (0 to disable). Must be a multiple of pruning-keep-every.
-snapshot-interval = 1000
+snapshot-interval = 2000
 
 # snapshot-keep-recent specifies the number of recent snapshots to keep and serve (0 to keep all). Each snapshot is about 500MiB
-snapshot-keep-recent = 2`,
+snapshot-keep-recent = 3`,
     }
   },
   created() {
-    const interval = 1000
+    const interval = 2000
     this.$http.getLatestBlock().then(l => {
       const { height } = l.block.header
-      if (height > interval * 3) {
-        this.$http.getBlockByHeight(Math.trunc((height - 3 * interval) / interval) * interval).then(x => {
+      if (height > interval) {
+        this.$http.getBlockByHeight(Math.trunc((height - interval) / interval) * interval).then(x => {
           this.hash = toHex(fromBase64(x.block_id.hash))
           this.height = x.block.header.height
           this.state = `[statesync]
