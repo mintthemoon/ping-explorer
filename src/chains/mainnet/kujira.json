@@ -14,6 +14,18 @@
         "exponent": "6",
         "coingecko_id": "kujira",
         "logo": "/logos/kujira.png"
+    }, {
+        "base": "uusdc",
+        "symbol": "USDC",
+        "exponent": 6,
+        "coingecko_id": "usd-coin",
+        "logo": ""
+    }, {
+        "base": "weth-wei",
+        "symbol": "wETH",
+        "exponent": 18,
+        "coingecko_id": "weth",
+        "logo": ""
     }],
     "logo": "/logos/kujira.png"
 }
