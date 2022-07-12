@@ -25,6 +25,24 @@
         "exponent": 18,
         "coingecko_id": "weth",
         "logo": ""
+    }, {
+        "base": "uatom",
+        "symbol": "ATOM",
+        "exponent": 6,
+        "coingecko_id": "cosmos-hub",
+        "logo": "/logos/cosmos.svg"
+    }, {
+        "base": "uosmo",
+        "symbol": "OSMO",
+        "exponent": 6,
+        "coingecko_id": "osmosis",
+        "logo": "/logos/osmosis.jpg"
+    }, {
+        "base": "ujuno",
+        "symbol": "JUNO",
+        "exponent": 6,
+        "coingecko_id": "juno-network",
+        "logo": "/logos/juno.jpg"
     }],
     "logo": "/logos/kujira.png"
 }
