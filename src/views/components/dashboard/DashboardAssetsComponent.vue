@@ -54,8 +54,9 @@ export default {
     this.$http.getBankTotals().then(res => {
       const toshow = res.sort()
       this.assets = toshow.reverse().map(x => {
+        const denom = this.denoms[x.denom] ? this.denoms[x.denom].base_denom : x.denom
         const xh = x
-        xh.abbr = formatTokenAmount(x.amount, 0, x.denom)
+        xh.abbr = formatTokenAmount(x.amount, 0, denom)
         return xh
       })
     })
