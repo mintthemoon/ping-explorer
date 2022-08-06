@@ -539,6 +539,18 @@ export function getStakingValidatorOperator(chainName, addr, length = -1) {
   return addr
 }
 
+export function getBlockRate(chainName) {
+  let blockRate = 6
+  Object.values(getLocalChains())
+    .filter(chain => chain.chain_name === chainName)
+    .forEach(chain => {
+      if (chain.block_rate) {
+        blockRate = Number(chain.block_rate)
+      }
+    })
+  return blockRate
+}
+
 export * from 'compare-versions'
 
 export * from './data'

@@ -4,6 +4,7 @@
     "rpc": ["https://test-rpc-kujira.mintthemoon.xyz", "https://kujira-testnet-rpc.polkachu.com"],
     "sdk_version": "0.45.4",
     "addr_prefix": "kujira",
+    "block_rate": "2.5",
     "coin_type": "118",
     "assets": [{
         "base": "ukuji",
