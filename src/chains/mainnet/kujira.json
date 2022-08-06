@@ -5,6 +5,7 @@
     "snapshot_provider": "",
     "sdk_version": "0.45.4",
     "addr_prefix": "kujira",
+    "block_rate": "2.2",
     "coin_type": "118",
     "min_tx_fee": "1250",
     "assets": [{

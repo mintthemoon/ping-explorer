@@ -266,7 +266,7 @@ import FlipCountdown from 'vue2-flip-countdown'
 // import fetch from 'node-fetch'
 
 import {
-  getCachedValidators, getStakingValidatorByAccount, percent, tokenFormatter,
+  getCachedValidators, getStakingValidatorByAccount, getBlockRate, percent, tokenFormatter,
 } from '@/libs/utils'
 import { Proposal, Proposer } from '@/libs/data'
 import dayjs from 'dayjs'
@@ -353,7 +353,8 @@ export default {
         if (Number(this.proposal?.contents.plan.height || 0) > 0 && this.latest?.block) {
           const blocks = Number(this.proposal.contents.plan.height) - Number(this.latest.block?.header?.height || 0)
           if (blocks > 0) {
-            const endtime = dayjs().add(blocks * 6, 'second').format('YYYY-MM-DD HH:mm:ss')
+            const blockRate = getBlockRate(this.$http.config.chain_name)
+            const endtime = dayjs().add(blocks * blockRate, 'second').format('YYYY-MM-DD HH:mm:ss')
             return endtime
           }
         }
