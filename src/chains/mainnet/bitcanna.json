@@ -6,6 +6,7 @@
     "sdk_version": "0.45.10",
     "coin_type": "118",
     "min_tx_fee": "420",
+    "block_rate": "5.1",
     "assets": [{
         "base": "ubcna",
         "symbol": "BCNA",
