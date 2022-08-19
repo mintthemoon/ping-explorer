@@ -44,6 +44,36 @@
         "exponent": 6,
         "coingecko_id": "juno-network",
         "logo": "/logos/juno.jpg"
+    }, {
+        "base": "aevmos",
+        "symbol": "EVMOS",
+        "exponent": "18",
+        "coingecko_id": "evmos",
+        "logo": "/logos/evmos.jpeg"
+    }, {
+        "base": "uluna",
+        "symbol": "LUNA",
+        "exponent": "6",
+        "coingecko_id": "terra",
+        "logo": "/logos/terra-luna.jpg"
+    }, {
+        "base": "uscrt",
+        "symbol": "SCRT",
+        "exponent": "6",
+        "coingecko_id": "secret",
+        "logo": "/logos/secret.png"
+    }, {
+        "base": "ustars",
+        "symbol": "STARS",
+        "exponent": "6",
+        "coingecko_id": "stargaze",
+        "logo": "/logos/stargaze.png"
+    }, {
+        "base": "wavax-wei",
+        "symbol": "wAVAX",
+        "exponent": "18",
+        "coingecko_id": "avalanche",
+        "logo": ""
     }],
     "logo": "/logos/kujira.png"
 }
