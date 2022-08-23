@@ -74,6 +74,12 @@
         "exponent": "18",
         "coingecko_id": "avalanche",
         "logo": ""
+    }, {
+        "base": "cw20:juno1qsrercqegvs4ye0yqg93knv73ye5dc3prqwd6jcdcuj8ggp6w0us66deup",
+        "symbol": "LOOP",
+        "exponent": "6",
+        "coingecko_id": "",
+        "logo": ""
     }],
     "logo": "/logos/kujira.png"
 }
