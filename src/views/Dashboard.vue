@@ -470,6 +470,7 @@
         </b-col>
       </b-row>
     </b-card>
+    <dashboard-assets-component/>
     <router-link to="/wallet/import">
       <b-card class="addzone text-center">
         <feather-icon icon="PlusIcon" />
@@ -505,7 +506,11 @@ import ParametersModuleComponent from './components/parameters/ParametersModuleC
 import DashboardCardHorizontal from './components/dashboard/DashboardCardHorizontal.vue'
 import DashboardCardVertical from './components/dashboard/DashboardCardVertical.vue'
 import DashboardPriceChart2 from './components/dashboard/DashboardPriceChart2.vue'
+<<<<<<< HEAD
 import FeatherIcon from '../@core/components/feather-icon/FeatherIcon.vue'
+=======
+import DashboardAssetsComponent from './components/dashboard/DashboardAssetsComponent.vue'
+>>>>>>> 39b3cf2 (put that thing back where it came from or so help me (the chain assets list))
 
 export default {
   components: {
