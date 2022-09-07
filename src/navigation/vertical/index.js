@@ -3,44 +3,29 @@ import { isTestnet } from '../../libs/utils'
 
 function processMenu() {
   const chainMenus = []
-  const blockchains = []
+  chainMenus.push({ header: 'blockchains' })
   Object.keys(store.state.chains.config).forEach(chain => {
     const menu = {
       title: chain,
       logo: store.state.chains.config[chain].logo,
       route: { name: 'dashboard', params: { chain } },
     }
-    blockchains.push(menu)
+    chainMenus.push(menu)
   })
-
-  if (blockchains.length > 1) {
-    chainMenus.push({ header: 'ecosystem' })
-    chainMenus.push({
-      title: 'blockchains',
-      children: blockchains,
-      tag: `${blockchains.length}`,
-      icon: 'https://ping.pub/logo.svg',
-    })
-  }
   chainMenus.push({ header: 'LINKS' })
   if (isTestnet()) {
     chainMenus.push({
-      title: 'Mainnet Explorer',
+      title: 'Mainnets',
       href: 'https://cosmos.mintthemoon.xyz',
       icon: 'ChromeIcon',
     })
   } else {
     chainMenus.push({
-      title: 'Testnet Explorer',
+      title: 'Testnets',
       href: 'http://testnets-cosmos.mintthemoon.xyz',
       icon: 'LifeBuoyIcon',
     })
   }
-  // chainMenus.push({
-  //   title: 'Discord',
-  //   href: 'https://discord.gg/CmjYVSr6GW',
-  //   icon: 'EyeIcon',
-  // })
   chainMenus.push({
     title: 'Twitter',
     href: 'https://twitter.com/mintthemoon',
@@ -50,6 +35,11 @@ function processMenu() {
     title: 'Github',
     href: 'https://github.com/mintthemoon',
     icon: 'GithubIcon',
+  })
+  chainMenus.push({
+    title: 'Website',
+    href: 'https://mintthemoon.xyz',
+    icon: 'ChromeIcon',
   })
 
   return chainMenus
