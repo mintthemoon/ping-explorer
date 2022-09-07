@@ -1,8 +1,11 @@
 <template>
   <b-card v-if="assets">
     <b-card-title>
-      Assets
+      Chain Assets
     </b-card-title>
+    <b-card-text>
+      Warning: not all IBC denoms are valid.
+    </b-card-text>
     <b-table
       :items="assets"
       :fields="cfield"
