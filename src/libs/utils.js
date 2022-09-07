@@ -441,7 +441,7 @@ export function formatTokenAmount(tokenAmount, decimals = 2, tokenDenom = 'uatom
       if (asset) exp = asset.exponent
     }
   })
-  amount = Number(Number(tokenAmount)) / (10 ** exp)
+  amount = Number(Number(tokenAmount)) / (10 ** Number(exp))
   if (amount > 10) {
     if (format) { return numberWithCommas(parseFloat(amount.toFixed(decimals))) }
     return parseFloat(amount.toFixed(decimals))
