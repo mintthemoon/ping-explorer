@@ -15,6 +15,12 @@
         "coingecko_id": "kujira",
         "logo": "/logos/kujira.png"
     }, {
+        "base": "factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk",
+        "symbol": "USK",
+        "exponent": 6,
+        "coingecko_id": "",
+        "logo": ""
+    }, {
         "base": "uusdc",
         "symbol": "USDC",
         "exponent": 6,
