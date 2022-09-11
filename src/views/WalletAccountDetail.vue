@@ -487,6 +487,8 @@
 </template>
 
 <script>
+import { sha256 } from '@cosmjs/crypto'
+import { toHex } from '@cosmjs/encoding'
 import { $themeColors } from '@themeConfig'
 import dayjs from 'dayjs'
 import {
@@ -740,6 +742,12 @@ export default {
     },
   },
   created() {
+    this.$http.getAllIBCDenoms().then(x => {
+      x.denom_traces.forEach(trace => {
+        const hash = toHex(sha256(new TextEncoder().encode(`${trace.path}/${trace.base_denom}`)))
+        this.$set(this.denoms, `ibc/${hash.toUpperCase()}`, trace.base_denom)
+      })
+    })
     this.$http.getAuthAccount(this.address).then(acc => {
       this.account = acc.account
       this.initial()
@@ -821,8 +829,9 @@ export default {
       return tokenFormatter(v, this.denoms)
     },
     formatCurrency(amount, denom) {
-      const qty = this.formatAmount(amount, 2, denom, false)
-      const d2 = this.formatDenom(denom)
+      const v = this.denoms[denom] ? this.denoms[denom] : denom
+      const qty = this.formatAmount(amount, 2, v, false)
+      const d2 = this.formatDenom(v)
       const userCurrency = getUserCurrency()
       const quote = this.$store.state.chains.quotes[d2]
       if (quote) {
