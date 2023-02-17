@@ -1,5 +1,5 @@
 import {
-  Bech32, fromBase64, fromBech32, fromHex, toBase64, toBech32, toHex,
+  fromBase64, fromBech32, fromHex, toBase64, toBech32, toHex,
 } from '@cosmjs/encoding'
 import { sha256, stringToPath } from '@cosmjs/crypto'
 // ledger
@@ -82,20 +82,26 @@ export async function connectLedger(transport = 'usb') {
   return new CosmosApp(trans)
 }
 
-export function operatorAddressToAccount(operAddress) {
-  const { prefix, data } = Bech32.decode(operAddress)
-  if (prefix === 'iva') { // handle special cases
-    return Bech32.encode('iaa', data)
-  }
-  if (prefix === 'crocncl') { // handle special cases
-    return Bech32.encode('cro', data)
-  }
-  return Bech32.encode(prefix.replace('valoper', ''), data)
+export function valoperToPrefix(valoper) {
+  const prefixIndex = valoper.indexOf('valoper')
+  if (prefixIndex === -1) return null
+  return valoper.slice(0, prefixIndex)
 }
 
-// TODO, not tested
-export function pubkeyToAccountAddress(pubkey, prefix) {
-  return Bech32.encode(prefix, pubkey, 40)
+export function operatorAddressToAccount(operAddress) {
+  const { prefix, data } = fromBech32(operAddress)
+  if (prefix === 'iva') { // handle special cases
+    return toBech32('iaa', data)
+  }
+  if (prefix === 'crocncl') { // handle special cases
+    return toBech32('cro', data)
+  }
+  return toBech32(prefix.replace('valoper', ''), data)
+}
+
+export function pubKeyToValcons(pubkey, prefix) {
+  const addressData = sha256(fromBase64(pubkey.key)).slice(0, 20)
+  return toBech32(`${prefix}valcons`, addressData)
 }
 
 export function toETHAddress(cosmosAddress) {
@@ -195,12 +201,13 @@ export function consensusPubkeyToHexAddress(consensusPubkey) {
   let raw = null
   if (typeof consensusPubkey === 'object') {
     if (consensusPubkey['@type'] === '/cosmos.crypto.ed25519.PubKey') {
-      raw = toBase64(fromHex(toHex(sha256(fromBase64(consensusPubkey.key))).slice(0, 40)))
+      // raw = toBase64(fromHex(toHex(sha256(fromBase64(consensusPubkey.key))).slice(0, 40)))
+      raw = toHex(sha256(fromBase64(consensusPubkey.key))).slice(0, 40).toUpperCase()
       return raw
     }
     // /cosmos.crypto.secp256k1.PubKey
     if (consensusPubkey['@type'] === '/cosmos.crypto.secp256k1.PubKey') {
-      raw = toBase64(fromHex(new RIPEMD160().update(Buffer.from(sha256(fromBase64(consensusPubkey.key)))).digest('hex')))
+      raw = new RIPEMD160().update(Buffer.from(sha256(fromBase64(consensusPubkey.key)))).digest('hex')
       return raw
     }
     if (consensusPubkey.type === 'tendermint/PubKeySecp256k1') {
@@ -247,10 +254,11 @@ export async function sign(device, chainId, signerAddress, messages, fee, memo, 
       throw new Error('Please install keplr extension')
     }
     await window.keplr.enable(chainId)
-    const signer = window.getOfflineSigner(chainId)
     if (isEvmosBasedChain(chainId)) {
+      const signer = window.getOfflineSigner(chainId)
       client = await SigningKeplerEthermintClient.offline(signer)
     } else {
+      const signer = window.getOfflineSignerOnlyAmino(chainId)
       client = await SigningStargateClient.offline(signer)
     }
   }
@@ -489,19 +497,21 @@ export function getCachedValidators(chainName) {
 }
 
 export function isHexAddress(v) {
-  const re = /^[A-Z\d]{40}$/
-  return re.test(v)
+  // const re = /^[A-Z\d]{40}$/
+  // return re.test(v)
+  return v.length === 28
 }
 
-export function getStakingValidatorByHex(chainName, hex) {
+export function getStakingValidatorByHex(chainName, textBase64) {
   const locals = localStorage.getItem(`validators-${chainName}`)
   if (locals) {
-    const val = JSON.parse(locals).find(x => consensusPubkeyToHexAddress(x.consensus_pubkey) === hex)
+    const val = JSON.parse(locals)
+      .find(x => toBase64(fromHex(consensusPubkeyToHexAddress(x.consensus_pubkey))) === textBase64)
     if (val) {
       return val.description.moniker
     }
   }
-  return abbr(hex)
+  return abbr(textBase64)
 }
 
 export function getStakingValidatorByAccount(chainName, addr) {

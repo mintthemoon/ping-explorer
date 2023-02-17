@@ -199,7 +199,7 @@
           </template>
         </b-table>
       </b-card-body>
-      <b-card-footer class="d-none d-md-block">
+      <b-card-footer class="d-none d-md-block d-md-flex justify-content-between">
         <small>
           <b-badge variant="danger">
               &nbsp;
@@ -210,6 +210,20 @@
           </b-badge>
           Top 67% of Voting Power
         </small>
+        <download-excel
+          :fields="excelCols"
+          :data="list"
+          type="csv"
+          worksheet="Validators"
+          name="validators.xls"
+        >
+          <b-button
+            variant="primary"
+            size="sm"
+          >
+            Export to Excel
+          </b-button>
+        </download-excel>
       </b-card-footer>
     </b-card>
     <operation-modal
@@ -230,8 +244,7 @@ import {
 } from '@/libs/utils'
 import { keybase } from '@/libs/fetch'
 import OperationModal from '@/views/components/OperationModal/index.vue'
-// import { toHex } from '@cosmjs/encoding'
-// import fetch from 'node-fetch'
+import DownloadExcel from 'vue-json-excel'
 
 export default {
   components: {
@@ -248,6 +261,7 @@ export default {
     BFormGroup,
     BCardFooter,
     OperationModal,
+    DownloadExcel,
   },
   directives: {
     'b-tooltip': VBTooltip,
@@ -264,6 +278,25 @@ export default {
       changes: {},
       latestPower: {},
       previousPower: {},
+      excelCols: {
+        Validator: 'description.moniker',
+        Identity: 'description.identity',
+        Website: 'description.website',
+        'Operator Address': 'operator_address',
+        Status: 'status',
+        'Bonded Tokens': 'tokens',
+        'Formated Bonded Tokens': {
+          field: 'tokens',
+          callback: value => this.tokenFormatter(value, this.stakingParameters.bond_denom),
+        },
+        Percent: {
+          field: 'tokens',
+          callback: value => this.percent(value / this.stakingPool),
+        },
+        '24h Changes': 'changes',
+        'Unbonding Height': 'unbonding_height',
+        'Unbonding Time': 'unbonding_time',
+      },
       validator_fields: [
         {
           key: 'index',
@@ -435,11 +468,10 @@ export default {
       if (this.selectedStatus === 'inactive') return 'primary'
       const { index, item } = data
       if (index === 0) {
-        window.sum = item.tokens
-      } else {
-        window.sum += item.tokens
+        window.sum = 0
       }
       const rank = window.sum / this.stakingPool
+      window.sum += item.tokens // sum up after the calculating.
       if (rank < 0.333) {
         return 'danger'
       }

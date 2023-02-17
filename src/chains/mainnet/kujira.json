@@ -1,5 +1,6 @@
 {
     "chain_name": "kujira",
+    "coingecko": "kujira",
     "api": ["https://lcd-kujira.mintthemoon.xyz", "https://kujira-api.polkachu.com", "https://lcd.kaiyo.kujira.setten.io"],
     "rpc": ["https://rpc-kujira.mintthemoon.xyz", "https://kujira-rpc.polkachu.com"],
     "snapshot_provider": "",

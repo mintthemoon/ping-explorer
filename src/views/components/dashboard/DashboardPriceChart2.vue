@@ -54,16 +54,18 @@
                     </b-col>
                     <b-col
                       cols="4"
-                      class="text-uppercase text-truncate"
-                    >
-                      {{ coinInfo.symbol }}/{{ pair.target }}
-                    </b-col>
-                    <b-col
-                      cols="4"
                       class="font-weight-bold"
                       :class="`text-${colorMap(pair.trust_score)}`"
                     >
                       ${{ pair.converted_last.usd }}
+                    </b-col>
+                    <b-col
+                      v-b-tooltip.left
+                      cols="4"
+                      class="text-uppercase text-truncate"
+                      :title="`${pair.base}/${pair.target}`"
+                    >
+                      {{ pair.base }}/{{ pair.target }}
                     </b-col>
                   </b-row>
                 </b-dropdown-item>
@@ -74,9 +76,9 @@
                 <small>$</small>
               </sup>
               <h2 class="d-inline mr-25">
-                {{ selectedTicker.converted_last.usd }}
+                {{ selectedTicker.converted_last.usd || '-' }}
               </h2>
-              <sub class="text-body"><small>/ {{ selectedTicker.target }}</small></sub>
+              <sub class="text-body"><small>/ USD</small></sub>
             </div>
           </div>
           <!--/ buy  -->
@@ -173,6 +175,14 @@
           size="sm"
         >
           <feather-icon icon="GithubIcon" /> Github
+        </b-button>
+        <b-button
+          :href="discord"
+          class="mr-1"
+          variant="outline-secondary"
+          size="sm"
+        >
+          <feather-icon icon="MessageSquareIcon" /> Discord
         </b-button>
         <b-button
           :href="telegram"
@@ -346,7 +356,7 @@ export default {
       ]
     },
     color() {
-      return this.colorMap(this.selectedTicker.trust_score)
+      return this.colorMap(this.selectedTicker?.trust_score)
     },
     homepage() {
       if (this.coinInfo.links) {
@@ -357,6 +367,15 @@ export default {
     twitter() {
       if (this.coinInfo.links) {
         return this.coinInfo.links.twitter_screen_name ? `https://twitter.com/${this.coinInfo.links.twitter_screen_name}` : '#'
+      }
+      return '#'
+    },
+    discord() {
+      if (this.coinInfo.links) {
+        const discordLink = this.coinInfo.links.chat_url.filter(x => x.includes('discord'))
+        if (discordLink) {
+          return discordLink ? `${discordLink}` : '#'
+        }
       }
       return '#'
     },
@@ -383,8 +402,10 @@ export default {
       if (res) {
         this.coinInfo = res
         this.tickers = res.tickers
-        // eslint-disable-next-line prefer-destructuring
-        this.selectedTicker = this.tickers[0]
+        if (this.tickers.length > 0) {
+          // eslint-disable-next-line prefer-destructuring
+          this.selectedTicker = this.tickers[0]
+        }
       }
     })
   },

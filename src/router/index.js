@@ -212,6 +212,24 @@ const router = new VueRouter({
       },
     },
     {
+      path: '/:chain/account/:address/receive',
+      name: 'chain-receive',
+      component: () => import('@/views/WalletAccountReceive.vue'),
+      meta: {
+        pageTitle: 'Accounts',
+        breadcrumb: [
+          {
+            text: 'Accounts',
+            active: true,
+          },
+          {
+            text: 'Pay Me',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
       path: '/:chain/staking',
       name: 'staking',
       component: () => import('@/views/Staking.vue'),
@@ -231,16 +249,16 @@ const router = new VueRouter({
       component: () => import('@/views/StakingValidator.vue'),
       meta: {
         pageTitle: 'Staking Validator',
-        breadcrumb: [
+        breadcrumb: route => ([
           {
             text: 'Staking',
-            active: true,
+            to: `/${route.params.chain}/staking`,
           },
           {
             text: 'Validator',
             active: true,
           },
-        ],
+        ]),
       },
     },
     {
@@ -299,16 +317,16 @@ const router = new VueRouter({
       component: () => import('@/views/Block.vue'),
       meta: {
         pageTitle: 'Block',
-        breadcrumb: [
+        breadcrumb: route => ([
           {
             text: 'Blocks',
-            active: true,
+            to: `/${route.params.chain}/blocks`,
           },
           {
             text: 'Block',
             active: true,
           },
-        ],
+        ]),
       },
     },
     {

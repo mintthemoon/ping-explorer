@@ -52,13 +52,12 @@
             <span class="text-uppercase">{{ chainid || selected_chain.chain_name }}</span>
           </h6>
           <small id="data-provider">
-            {{ currentApi }} ({{ selected_chain.sdk_version || '-' }})
             <b-dropdown
               class="ml-0"
               variant="flat-primary"
               no-caret
               toggle-class="p-0"
-              right
+              left
               sm
             >
               <template #button-content>
@@ -76,6 +75,7 @@
                 {{ item }}
               </b-dropdown-item>
             </b-dropdown>
+            {{ currentApi }} ({{ selected_chain.sdk_version || '-' }})
           </small>
         </b-media-body>
       </b-media>
@@ -84,9 +84,9 @@
     <!-- <dark-Toggler class="d-none d-lg-block" /> -->
     <!-- Right Col -->
     <b-navbar-nav class="nav align-items-center ml-auto">
-      <dark-Toggler class="d-none d-lg-block" />
+      <dark-Toggler />
       <search-bar />
-      <locale />
+      <locale class="d-none" />
       <b-dropdown
         class="ml-1"
         variant="link"
@@ -114,7 +114,14 @@
         >
           <div class="d-flex flex-column">
             <div class="d-flex justify-content-between">
-              <span class="font-weight-bolder">{{ item.wallet }}
+              <span class="font-weight-bolder">
+                {{ item.wallet }}
+                <b-badge
+                  v-for="(name, i) in domains[item.address.addr]"
+                  :key="i"
+                  v-b-tooltip.hover.top="name.provider"
+                  variant="primary"
+                >{{ name.name }}</b-badge>
                 <b-avatar
                   v-if="item.wallet===walletName"
                   variant="success"
@@ -136,7 +143,7 @@
             icon="PlusIcon"
             size="16"
           />
-          <span class="align-middle ml-50">Import Address</span>
+          <span class="align-middle ml-50">Connect Wallet</span>
         </b-dropdown-item>
         <b-dropdown-divider />
 
@@ -187,7 +194,7 @@
 <script>
 import {
   BLink, BNavbarNav, BMedia, BMediaAside, BAvatar, BMediaBody, VBTooltip, BButton,
-  BDropdown, BDropdownItem, BDropdownDivider,
+  BDropdown, BDropdownItem, BDropdownDivider, BBadge,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
@@ -195,11 +202,13 @@ import Locale from '@core/layouts/components/app-navbar/components/Locale.vue'
 import SearchBar from '@core/layouts/components/app-navbar/components/SearchBar.vue'
 // import CartDropdown from '@core/layouts/components/app-navbar/components/CartDropdown.vue'
 import { getLocalAccounts, timeIn, toDay } from '@/libs/utils'
+import { resolvePrimaryDomainByAddress } from 'ibc-domains-sdk'
 // import UserDropdown from '@core/layouts/components/app-navbar/components/UserDropdown.vue'
 
 export default {
   components: {
     BLink,
+    BBadge,
     BNavbarNav,
     BAvatar,
     BMedia,
@@ -233,9 +242,14 @@ export default {
       tips: 'Synced',
       index: 0,
       chainid: '',
+      names: {},
+      loading: [],
     }
   },
   computed: {
+    domains() {
+      return this.names
+    },
     walletName() {
       const key = this.$store?.state?.chains?.defaultWallet
       return key || 'Wallet'
@@ -276,6 +290,33 @@ export default {
   },
   methods: {
     formatAddr(v) {
+      if (!this.loading.includes(v)) {
+        this.loading.push(v)
+        this.$http.resolveStarName(v).then(res => {
+          const name = {
+            name: res.data,
+            provider: 'Stargaze',
+          }
+          if (this.names[v]) {
+            this.names[v].push(name)
+          } else {
+            this.names[v] = [name]
+          }
+        })
+        resolvePrimaryDomainByAddress(this.address).then(result => {
+          if (result.isOk()) {
+            const name = {
+              name: result.value,
+              provider: 'IBC Domain',
+            }
+            if (this.names[v]) {
+              this.names[v].push(name)
+            } else {
+              this.names[v] = [name]
+            }
+          }
+        })
+      }
       return v.substring(0, 10).concat('...', v.substring(v.length - 10))
     },
     updateDefaultWallet(v) {
